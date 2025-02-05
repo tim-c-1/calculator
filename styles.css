@@ -24,7 +24,7 @@
     height: 50px;
 }
 
-.number, .operator, .special, .zero {
+.number, .operator, .special {
     flex-wrap: wrap;
     width: 20%;
     height: 20%;
@@ -41,7 +41,7 @@
     align-content: center;
 }
 
-.number, .zero {
+.number {
     background-color: gray;
 }
 
@@ -54,6 +54,6 @@
     color: black;
 }
 
-.zero {
+#zero {
     width: 40%;
 }
