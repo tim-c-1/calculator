@@ -1,0 +1,59 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    background-color: black;
+}
+
+.container {
+    height: 80vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;    
+}
+
+#output, .container{
+    width: 100vw;
+    background-color: black;
+    margin-left: 10px;
+    color: white;
+}
+
+#output {
+    font-size: 30px;
+    height: 50px;
+}
+
+.number, .operator, .special, .zero {
+    flex-wrap: wrap;
+    width: 20%;
+    height: 20%;
+    text-align: center;
+    align-content: center;
+    border-radius: 20px;
+    font-size: 20px;
+    
+}
+
+#output {
+    height: 50px;
+    text-align: center;
+    align-content: center;
+}
+
+.number, .zero {
+    background-color: gray;
+}
+
+.operator {
+    background-color: orange;
+}
+
+.special {
+    background-color: rgb(214, 214, 208);
+    color: black;
+}
+
+.zero {
+    width: 40%;
+}
