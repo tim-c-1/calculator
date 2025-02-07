@@ -11,7 +11,12 @@ function multiply(a, b){
 }
 
 function divide(a, b){
-    return a / b;
+    if(b == 0){
+        outputArea.textContent = "lol you can't do that";
+        return 0;
+    } else {
+        return a / b;
+    }
 }
 
 const operators = ["add", "subtract", "multiply", "divide"];
