@@ -24,7 +24,7 @@
     height: 50px;
 }
 
-.number, .operator, .special {
+.number, .operator, .special, .equals {
     flex-wrap: wrap;
     width: 20%;
     height: 20%;
@@ -45,7 +45,7 @@
     background-color: gray;
 }
 
-.operator {
+.operator, .equals {
     background-color: orange;
 }
 
