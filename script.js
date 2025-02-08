@@ -22,38 +22,46 @@ function divide(a, b){
 const operators = ["add", "subtract", "multiply", "divide"];
 
 function operate(num1, num2, operator){
-    operatorPressCount = 0;
-    console.log("presscount: ", operatorPressCount);
+    // operatorPressCount = 0;
+    // console.log("presscount: ", operatorPressCount);
     if (!operators.includes(operator)){
         return "Error, not an operator"
     } else {
-        outputArea.textContent = window[operator](num1, num2);
-        let answer = window[operator](num1, num2);
         
-        return answer;
+        let answer = window[operator](num1, num2);
+        ans = Math.round(answer * 100) / 100;
+        val1 = [ans];
+        workingValue = ans;
+        val2.pop();
+        
+        outputArea.textContent = ans;
+        calcCount++;
+        buttonPressCount = 0;
+        // operatorPressCount = 0; //clear operator count to restart cycle - dont think we need this.
+        return ans;
     }
 }
 
 // display updating
-function updateDisplay(button){
+function updateDisplay(value){
     if(outputArea.textContent == ""){
         
-        outputArea.textContent = button.textContent;
-        workingValue = parseFloat(button.textContent);
+        outputArea.textContent = value;
+        // workingValue = parseFloat(value);
         
     } else {
         
-        outputArea.textContent += button.textContent;
+        outputArea.textContent += value;
         
         // hold workingValue as string and concat new inputs until a float is able to be parsed.
-        workingValue += String(button.textContent);
-        if (workingValue.includes(".")){
-            if (workingValue.split(".")[1] != '' && button.textContent != 0){
-                workingValue = parseFloat(workingValue);
-            }
-        } else {
-            workingValue = parseFloat(workingValue);
-        }
+        // workingValue += String(value);
+        // if (workingValue.includes(".")){
+        //     if (workingValue.split(".")[1] != '' && value != 0){
+        //         workingValue = parseFloat(workingValue);
+        //     }
+        // } else {
+        //     workingValue = parseFloat(workingValue);
+        // }
     }
     
 }
@@ -84,8 +92,9 @@ const equalsButton = document.querySelector("#operate");
 acButton.addEventListener("click", function memClear() {
     val1.pop() && val2.pop() && opVal.pop();
     operatorPressCount = 0;
-    console.log("presscount: ", operatorPressCount);
     workingValue = '';
+    calcCount = 0;
+    buttonPressCount = 0;
     clearDisplay();
 });
 
@@ -94,54 +103,113 @@ let val2 = [];
 let opVal = [];
 let workingValue = '';
 let operatorPressCount = 0;
+let calcCount = 0;
+let buttonPressCount = 0;
 
-numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){ 
-    if (operatorPressCount == 1){
+numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
+    console.log("buttonPressCount: ", buttonPressCount); 
+    if (operatorPressCount > 0 && !buttonPressCount > 0){
         clearDisplay();
         console.log("cleared display");
-        console.log("working val = ", workingValue);
-        operatorPressCount = 0;
-        console.log("presscount: ", operatorPressCount);
+        workingValue = '';
+        buttonPressCount++; //only calls once until cleared by ac or operate.
+        // console.log("working val = ", workingValue);
+        // operatorPressCount = 0;
+        // console.log("presscount: ", operatorPressCount);
     }
-    updateDisplay(b);
+    if(outputArea.textContent == ""){
+        
+        // outputArea.textContent = value;
+        workingValue = parseFloat(b.textContent);
+        
+    } else {
+        workingValue += String(b.textContent);
+            if (workingValue.includes(".")){
+                if (workingValue.split(".")[1] != '' && b.textContent != 0){
+                    workingValue = parseFloat(workingValue);
+                }
+            } else {
+                workingValue = parseFloat(workingValue);
+            }
+        }
+    
+    updateDisplay(b.textContent);
 }));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
-    operatorPressCount++;
-    console.log("presscount: ", operatorPressCount);
-    if (val1.length > 0){
-        val2.push(parseFloat(workingValue));
+    
+    // is it the first time to select? write to value 1
+    if (operatorPressCount == 0 && val1 == ''){
+        val1.push(workingValue);
     }
+
+    //is it not the first time to select? write to value 2, value 1 has been rewritten with the previous answer
+    if (operatorPressCount >= 1 && buttonPressCount > 0){
+        val2.push(workingValue);
+    }
+
+    // if (val1.length > 0 && operatorPressCount == 1){
+    //     val2.push(workingValue);
+    //     console.log("pushed working value to val2");
+    // } else if(val1.length > 0 && operatorPressCount > 0){
+        
+    // }
+    operatorPressCount++;
+    console.log("operatorPressCount: ", operatorPressCount);
+
     if (val1.length > 0 && val2.length > 0 && opVal.length > 0){
-        operate(val1[0], val2[0], opVal[0]);
+        // operate(val1[0], val2[0], opVal[0]);
         const answer = operate(val1[0],val2[0],opVal[0]);
         console.log("answer: ", answer);
-        postCalcValueShift(answer);
-        operatorPressCount++;
-        console.log("presscount: ", operatorPressCount);
+        // postCalcValueShift(answer);
+        // operatorPressCount++;
+        console.log("calc'd.");
     }
+
+    opVal.pop();
     opVal.push(b.id);
     console.log(opVal);
-    if (val1 == ''){
-        val1.push(parseFloat(workingValue));
-        console.log(val1);
+    
+    // if (val1 == ''){
+    //     val1.push(parseFloat(workingValue));
+    //     console.log(val1);
         
-    }
+    // }
     // clearDisplay(); //possibly change this to capture val in var, wait to clear until operate?
     // outputArea.textContent = val1[0];
+    
 }))
 
 equalsButton.addEventListener("click", function calc(){
-    if (val2 == ''){
-        val2.push(parseFloat(workingValue));
-        console.log(val2);
+    console.log("operatorPressCount at equals: ", operatorPressCount);
+    if (operatorPressCount >= 1){
+        val2.push(workingValue);
     }
 
+
+    // if (val2 == ''){
+    //     val2.push(parseFloat(workingValue));
+    //     console.log(val2);
+    // }
+
     if (val1.length > 0 && val2.length > 0 && opVal.length > 0){
-        operate(val1[0],val2[0],opVal[0]);
+        // operate(val1[0],val2[0],opVal[0]);
         const answer = operate(val1[0],val2[0],opVal[0]);
         console.log("answer: ", answer);
-        postCalcValueShift(answer);
+        // postCalcValueShift(answer);
+        // operatorPressCount = 0;
+        console.log("operatorPressCount: ", operatorPressCount);
     } else {
-        outputArea.textContent = val1[0];
+        outputArea.textContent = workingValue;
     }
+    operatorPressCount = 0;
 })
+
+//** 
+// select numbers -> write to working value *
+// select operator for first time -> write working value to value 1 *
+// select next numbers -> clear display & write to working value -> update display *
+// select operator for second time OR select equals button -> write working value to value 2 -> operate *
+// select operator for first time -> write answer to value 1
+// select next numbers -> write to working value
+// select operator OR equals -> write working value to value 2 -> operate
+//  */ 
