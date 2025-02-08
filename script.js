@@ -22,6 +22,8 @@ function divide(a, b){
 const operators = ["add", "subtract", "multiply", "divide"];
 
 function operate(num1, num2, operator){
+    operatorPressCount = 0;
+    console.log("presscount: ", operatorPressCount);
     if (!operators.includes(operator)){
         return "Error, not an operator"
     } else {
@@ -49,6 +51,8 @@ function updateDisplay(button){
             if (workingValue.split(".")[1] != '' && button.textContent != 0){
                 workingValue = parseFloat(workingValue);
             }
+        } else {
+            workingValue = parseFloat(workingValue);
         }
     }
     
@@ -79,6 +83,8 @@ const equalsButton = document.querySelector("#operate");
 
 acButton.addEventListener("click", function memClear() {
     val1.pop() && val2.pop() && opVal.pop();
+    operatorPressCount = 0;
+    console.log("presscount: ", operatorPressCount);
     workingValue = '';
     clearDisplay();
 });
@@ -87,13 +93,21 @@ let val1 = [];
 let val2 = [];
 let opVal = [];
 let workingValue = '';
+let operatorPressCount = 0;
+
 numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){ 
-    if (opVal.length > 0) {
+    if (operatorPressCount == 1){
         clearDisplay();
+        console.log("cleared display");
+        console.log("working val = ", workingValue);
+        operatorPressCount = 0;
+        console.log("presscount: ", operatorPressCount);
     }
     updateDisplay(b);
 }));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
+    operatorPressCount++;
+    console.log("presscount: ", operatorPressCount);
     if (val1.length > 0){
         val2.push(parseFloat(workingValue));
     }
@@ -102,6 +116,8 @@ operatorButtons.forEach((b) => b.addEventListener("click", function captureVal()
         const answer = operate(val1[0],val2[0],opVal[0]);
         console.log("answer: ", answer);
         postCalcValueShift(answer);
+        operatorPressCount++;
+        console.log("presscount: ", operatorPressCount);
     }
     opVal.push(b.id);
     console.log(opVal);
