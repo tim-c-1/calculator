@@ -83,6 +83,15 @@ let val2 = [];
 let opVal = [];
 numberButtons.forEach((b) => b.addEventListener("click", () => updateDisplay(b)));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
+    if (val1.length > 0){
+        val2.push(parseFloat(outputArea.value));
+    }
+    if (val1.length > 0 && val2.length > 0 && opVal.length > 0){
+        operate(val1[0], val2[0], opVal[0]);
+        const answer = operate(val1[0],val2[0],opVal[0]);
+        console.log("answer: ", answer);
+        postCalcValueShift(answer);
+    }
     opVal.push(b.id);
     console.log(opVal);
     if (val1 == ''){
@@ -90,7 +99,7 @@ operatorButtons.forEach((b) => b.addEventListener("click", function captureVal()
         console.log(val1);
         
     }
-    clearDisplay();
+    clearDisplay(); //possibly change this to capture val in var, wait to clear until operate?
 }))
 
 equalsButton.addEventListener("click", function calc(){
