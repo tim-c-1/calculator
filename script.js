@@ -35,16 +35,21 @@ function operate(num1, num2, operator){
 // display updating
 function updateDisplay(button){
     if(outputArea.textContent == ""){
-        outputArea.textContent = button.textContent;
-        outputArea.value = button.textContent;
-        // let currentValue = parseFloat(button.textContent);
-        // console.log(currentValue);
-    } else {
-        outputArea.textContent = outputArea.textContent + button.textContent;
-        outputArea.value = outputArea.value + button.textContent;
         
-        // let currentValue = parseFloat(button.textContent) + parseFloat(outputArea.textContent);
-        // console.log(currentValue);
+        outputArea.textContent = button.textContent;
+        workingValue = parseFloat(button.textContent);
+        
+    } else {
+        
+        outputArea.textContent += button.textContent;
+        
+        // hold workingValue as string and concat new inputs until a float is able to be parsed.
+        workingValue += String(button.textContent);
+        if (workingValue.includes(".")){
+            if (workingValue.split(".")[1] != '' && button.textContent != 0){
+                workingValue = parseFloat(workingValue);
+            }
+        }
     }
     
 }
@@ -52,7 +57,6 @@ function updateDisplay(button){
 // clear display
 function clearDisplay(){
     outputArea.textContent = '';
-    outputArea.value = '';
 }
 
 function postCalcValueShift(answer){
@@ -75,16 +79,23 @@ const equalsButton = document.querySelector("#operate");
 
 acButton.addEventListener("click", function memClear() {
     val1.pop() && val2.pop() && opVal.pop();
+    workingValue = '';
     clearDisplay();
 });
 
 let val1 = [];
 let val2 = [];
 let opVal = [];
-numberButtons.forEach((b) => b.addEventListener("click", () => updateDisplay(b)));
+let workingValue = '';
+numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){ 
+    if (opVal.length > 0) {
+        clearDisplay();
+    }
+    updateDisplay(b);
+}));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
     if (val1.length > 0){
-        val2.push(parseFloat(outputArea.value));
+        val2.push(parseFloat(workingValue));
     }
     if (val1.length > 0 && val2.length > 0 && opVal.length > 0){
         operate(val1[0], val2[0], opVal[0]);
@@ -95,16 +106,17 @@ operatorButtons.forEach((b) => b.addEventListener("click", function captureVal()
     opVal.push(b.id);
     console.log(opVal);
     if (val1 == ''){
-        val1.push(parseFloat(outputArea.value));
+        val1.push(parseFloat(workingValue));
         console.log(val1);
         
     }
-    clearDisplay(); //possibly change this to capture val in var, wait to clear until operate?
+    // clearDisplay(); //possibly change this to capture val in var, wait to clear until operate?
+    // outputArea.textContent = val1[0];
 }))
 
 equalsButton.addEventListener("click", function calc(){
     if (val2 == ''){
-        val2.push(parseFloat(outputArea.value));
+        val2.push(parseFloat(workingValue));
         console.log(val2);
     }
 
