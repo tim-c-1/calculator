@@ -109,6 +109,50 @@ function numberEntry(b) {
         updateDisplay(b);
     }
 }
+
+function operatorEntry(b){
+    // is it the first time to select? write to value 1
+    if (operatorPressCount == 0 && val1 == ''){
+        val1.push(workingValue);
+    }
+
+    //is it not the first time to select? write to value 2, value 1 has been rewritten with the previous answer
+    if (operatorPressCount >= 1 && buttonPressCount > 0){
+        val2.push(workingValue);
+    }
+
+    // if (val1.length > 0 && operatorPressCount == 1){
+    //     val2.push(workingValue);
+    //     console.log("pushed working value to val2");
+    // } else if(val1.length > 0 && operatorPressCount > 0){
+        
+    // }
+    operatorPressCount++;
+    console.log("operatorPressCount: ", operatorPressCount);
+
+    if (val1.length > 0 && val2.length > 0 && opVal.length > 0){
+        // operate(val1[0], val2[0], opVal[0]);
+        const answer = operate(val1[0],val2[0],opVal[0]);
+        console.log("answer: ", answer);
+        // postCalcValueShift(answer);
+        // operatorPressCount++;
+        console.log("calc'd.");
+    }
+
+    opVal.pop();
+    opVal.push(b);
+    console.log(opVal);
+    
+    // if (val1 == ''){
+    //     val1.push(parseFloat(workingValue));
+    //     console.log(val1);
+        
+    // }
+    // clearDisplay(); //possibly change this to capture val in var, wait to clear until operate?
+    // outputArea.textContent = val1[0];
+    
+}
+
 // console.log(operators["add"]);
 // console.log(operate(1,2,"add"));
 
@@ -139,52 +183,18 @@ let operatorPressCount = 0;
 let calcCount = 0;
 let buttonPressCount = 0;
 const numeric = [1,2,3,4,5,6,7,8,9,0];
+const keyboardOperators = {
+    "+": "add", 
+    "-" : "subtract", 
+    "*" : "multiply",
+    "/" : "divide"
+};
 
 numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
   numberEntry(b.textContent);
 }));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
-    
-    // is it the first time to select? write to value 1
-    if (operatorPressCount == 0 && val1 == ''){
-        val1.push(workingValue);
-    }
-
-    //is it not the first time to select? write to value 2, value 1 has been rewritten with the previous answer
-    if (operatorPressCount >= 1 && buttonPressCount > 0){
-        val2.push(workingValue);
-    }
-
-    // if (val1.length > 0 && operatorPressCount == 1){
-    //     val2.push(workingValue);
-    //     console.log("pushed working value to val2");
-    // } else if(val1.length > 0 && operatorPressCount > 0){
-        
-    // }
-    operatorPressCount++;
-    console.log("operatorPressCount: ", operatorPressCount);
-
-    if (val1.length > 0 && val2.length > 0 && opVal.length > 0){
-        // operate(val1[0], val2[0], opVal[0]);
-        const answer = operate(val1[0],val2[0],opVal[0]);
-        console.log("answer: ", answer);
-        // postCalcValueShift(answer);
-        // operatorPressCount++;
-        console.log("calc'd.");
-    }
-
-    opVal.pop();
-    opVal.push(b.id);
-    console.log(opVal);
-    
-    // if (val1 == ''){
-    //     val1.push(parseFloat(workingValue));
-    //     console.log(val1);
-        
-    // }
-    // clearDisplay(); //possibly change this to capture val in var, wait to clear until operate?
-    // outputArea.textContent = val1[0];
-    
+    operatorEntry(b.id);    
 }))
 
 equalsButton.addEventListener("click", function calc(){
@@ -218,10 +228,23 @@ percentButton.addEventListener("click", function percent(){
 })
 
 document.addEventListener("keydown", (k) => {
+    // console.log(k.key);
     if (numeric.includes(parseInt(k.key)) || k.key == "."){
         console.log(k.key);
         numberEntry(k.key);
     }
+    // disallow backspace of answer value
+    if (k.key == "Backspace" && val1[0] != workingValue){
+        console.log("backspace attempted");
+        outputArea.textContent = outputArea.textContent.slice(0,-1);
+        workingValue = parseFloat(String(workingValue).slice(0,-1));
+    }
+    if (k.key in keyboardOperators){
+        console.log("its there", k.key);
+        console.log(keyboardOperators[k.key]);
+        operatorEntry(keyboardOperators[k.key]);
+    }
+    
 })
 
 //** 
