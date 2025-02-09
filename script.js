@@ -190,6 +190,11 @@ function acEntry (){
     buttonPressCount = 0;
     clearDisplay();
 }
+
+function plusMinusEntry(){
+    workingValue = workingValue * -1;
+    outputArea.textContent = (parseFloat(outputArea.textContent) * -1);
+}
 // console.log(operators["add"]);
 // console.log(operate(1,2,"add"));
 
@@ -236,6 +241,10 @@ equalsButton.addEventListener("click", function calc(){
 
 percentButton.addEventListener("click", function percent(){
     percentEntry();
+})
+
+plusminusButton.addEventListener("click", function plusMinus(){
+    plusMinusEntry();
 })
 
 document.addEventListener("keydown", (k) => {
