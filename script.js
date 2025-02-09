@@ -218,7 +218,7 @@ percentButton.addEventListener("click", function percent(){
 })
 
 document.addEventListener("keydown", (k) => {
-    if (numeric.includes(parseInt(k.key))){
+    if (numeric.includes(parseInt(k.key)) || k.key == "."){
         console.log(k.key);
         numberEntry(k.key);
     }
