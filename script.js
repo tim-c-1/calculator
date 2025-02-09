@@ -208,6 +208,11 @@ equalsButton.addEventListener("click", function calc(){
     operatorPressCount = 0;
 })
 
+percentButton.addEventListener("click", function percent(){
+    workingValue = workingValue / 100;
+    outputArea.textContent = (parseFloat(outputArea.textContent) / 100);
+})
+
 //** 
 // select numbers -> write to working value *
 // select operator for first time -> write working value to value 1 *
