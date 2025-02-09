@@ -29,7 +29,7 @@ function operate(num1, num2, operator){
     } else {
         
         let answer = window[operator](num1, num2);
-        ans = Math.round(answer * 100) / 100;
+        ans = Math.round(answer * 1000) / 1000;
         val1 = [ans];
         workingValue = ans;
         val2.pop();
@@ -119,8 +119,11 @@ numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
     }
     if(outputArea.textContent == ""){
         
-        // outputArea.textContent = value;
-        workingValue = parseFloat(b.textContent);
+        if (b.textContent != "."){
+            workingValue = parseFloat(b.textContent);
+        } else {
+            workingValue += String(b.textContent);
+        }
         
     } else {
         workingValue += String(b.textContent);
@@ -128,7 +131,7 @@ numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
                 if (workingValue.split(".")[1] != '' && b.textContent != 0){
                     workingValue = parseFloat(workingValue);
                 }
-            } else {
+            } else if (workingValue != "."){ //dont parsefloat until there's something other than a period
                 workingValue = parseFloat(workingValue);
             }
         }
