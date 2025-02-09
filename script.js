@@ -76,6 +76,39 @@ function postCalcValueShift(answer){
     val2.pop();
     opVal.pop();
 }
+function numberEntry(b) {
+    console.log("buttonPressCount: ", buttonPressCount); 
+    if (operatorPressCount > 0 && !buttonPressCount > 0){
+        clearDisplay();
+        console.log("cleared display");
+        workingValue = '';
+        buttonPressCount++; //only calls once until cleared by ac or operate.
+        // console.log("working val = ", workingValue);
+        // operatorPressCount = 0;
+        // console.log("presscount: ", operatorPressCount);
+    }
+    if(outputArea.textContent == ""){
+        
+        if (b != "."){
+            workingValue = parseFloat(b);
+        } else {
+            workingValue += String(b);
+        }
+        
+    } else {
+        workingValue += String(b);
+            if (workingValue.includes(".")){
+                if (workingValue.split(".")[1] != '' && b != 0){
+                    workingValue = parseFloat(workingValue);
+                }
+            } else if (workingValue != "."){ //dont parsefloat until there's something other than a period
+                workingValue = parseFloat(workingValue);
+            }
+        }
+    if (!outputArea.textContent.includes(".") || b != "."){
+        updateDisplay(b);
+    }
+}
 // console.log(operators["add"]);
 // console.log(operate(1,2,"add"));
 
@@ -105,39 +138,10 @@ let workingValue = '';
 let operatorPressCount = 0;
 let calcCount = 0;
 let buttonPressCount = 0;
+const numeric = [1,2,3,4,5,6,7,8,9,0];
 
 numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
-    console.log("buttonPressCount: ", buttonPressCount); 
-    if (operatorPressCount > 0 && !buttonPressCount > 0){
-        clearDisplay();
-        console.log("cleared display");
-        workingValue = '';
-        buttonPressCount++; //only calls once until cleared by ac or operate.
-        // console.log("working val = ", workingValue);
-        // operatorPressCount = 0;
-        // console.log("presscount: ", operatorPressCount);
-    }
-    if(outputArea.textContent == ""){
-        
-        if (b.textContent != "."){
-            workingValue = parseFloat(b.textContent);
-        } else {
-            workingValue += String(b.textContent);
-        }
-        
-    } else {
-        workingValue += String(b.textContent);
-            if (workingValue.includes(".")){
-                if (workingValue.split(".")[1] != '' && b.textContent != 0){
-                    workingValue = parseFloat(workingValue);
-                }
-            } else if (workingValue != "."){ //dont parsefloat until there's something other than a period
-                workingValue = parseFloat(workingValue);
-            }
-        }
-    if (!outputArea.textContent.includes(".") || b.textContent != "."){
-        updateDisplay(b.textContent);
-    }
+  numberEntry(b.textContent);
 }));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
     
@@ -211,6 +215,13 @@ equalsButton.addEventListener("click", function calc(){
 percentButton.addEventListener("click", function percent(){
     workingValue = workingValue / 100;
     outputArea.textContent = (parseFloat(outputArea.textContent) / 100);
+})
+
+document.addEventListener("keydown", (k) => {
+    if (numeric.includes(parseInt(k.key))){
+        console.log(k.key);
+        numberEntry(k.key);
+    }
 })
 
 //** 
