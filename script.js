@@ -135,8 +135,9 @@ numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
                 workingValue = parseFloat(workingValue);
             }
         }
-    
-    updateDisplay(b.textContent);
+    if (!outputArea.textContent.includes(".") || b.textContent != "."){
+        updateDisplay(b.textContent);
+    }
 }));
 operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
     
