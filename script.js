@@ -153,51 +153,7 @@ function operatorEntry(b){
     
 }
 
-// console.log(operators["add"]);
-// console.log(operate(1,2,"add"));
-
-const outputArea = document.querySelector("#output");
-const acButton = document.querySelector("#AC");
-const plusminusButton = document.querySelector("#plusminus");
-const percentButton = document.querySelector("#percent");
-const divideButton = document.querySelector("#divide");
-const sevenButton = document.querySelector("#seven");
-const numberButtons = document.querySelectorAll(".number");
-const operatorButtons = document.querySelectorAll(".operator");
-const equalsButton = document.querySelector("#operate");
-
-acButton.addEventListener("click", function memClear() {
-    val1.pop() && val2.pop() && opVal.pop();
-    operatorPressCount = 0;
-    workingValue = '';
-    calcCount = 0;
-    buttonPressCount = 0;
-    clearDisplay();
-});
-
-let val1 = [];
-let val2 = [];
-let opVal = [];
-let workingValue = '';
-let operatorPressCount = 0;
-let calcCount = 0;
-let buttonPressCount = 0;
-const numeric = [1,2,3,4,5,6,7,8,9,0];
-const keyboardOperators = {
-    "+": "add", 
-    "-" : "subtract", 
-    "*" : "multiply",
-    "/" : "divide"
-};
-
-numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
-  numberEntry(b.textContent);
-}));
-operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
-    operatorEntry(b.id);    
-}))
-
-equalsButton.addEventListener("click", function calc(){
+function equalsEntry(){
     console.log("operatorPressCount at equals: ", operatorPressCount);
     if (operatorPressCount >= 1){
         val2.push(workingValue);
@@ -220,11 +176,66 @@ equalsButton.addEventListener("click", function calc(){
         outputArea.textContent = workingValue;
     }
     operatorPressCount = 0;
+}
+function percentEntry(){
+    workingValue = workingValue / 100;
+    outputArea.textContent = (parseFloat(outputArea.textContent) / 100);
+}
+
+function acEntry (){
+    val1.pop() && val2.pop() && opVal.pop();
+    operatorPressCount = 0;
+    workingValue = '';
+    calcCount = 0;
+    buttonPressCount = 0;
+    clearDisplay();
+}
+// console.log(operators["add"]);
+// console.log(operate(1,2,"add"));
+
+const outputArea = document.querySelector("#output");
+const acButton = document.querySelector("#AC");
+const plusminusButton = document.querySelector("#plusminus");
+const percentButton = document.querySelector("#percent");
+const divideButton = document.querySelector("#divide");
+const sevenButton = document.querySelector("#seven");
+const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalsButton = document.querySelector("#operate");
+
+
+let val1 = [];
+let val2 = [];
+let opVal = [];
+let workingValue = '';
+let operatorPressCount = 0;
+let calcCount = 0;
+let buttonPressCount = 0;
+const numeric = [1,2,3,4,5,6,7,8,9,0];
+const keyboardOperators = {
+    "+": "add", 
+    "-" : "subtract", 
+    "*" : "multiply",
+    "/" : "divide"
+};
+
+acButton.addEventListener("click", function memClear() {
+    acEntry();
+});
+
+numberButtons.forEach((b) => b.addEventListener("click", function buttonPress(){
+  numberEntry(b.textContent);
+}));
+operatorButtons.forEach((b) => b.addEventListener("click", function captureVal(){
+    operatorEntry(b.id);    
+}))
+
+equalsButton.addEventListener("click", function calc(){
+   equalsEntry();
 })
 
 percentButton.addEventListener("click", function percent(){
-    workingValue = workingValue / 100;
-    outputArea.textContent = (parseFloat(outputArea.textContent) / 100);
+    percentEntry();
 })
 
 document.addEventListener("keydown", (k) => {
@@ -244,7 +255,15 @@ document.addEventListener("keydown", (k) => {
         console.log(keyboardOperators[k.key]);
         operatorEntry(keyboardOperators[k.key]);
     }
-    
+    if (k.key == "Enter"){
+        equalsEntry();
+    }
+    if (k.key == "%"){
+        percentEntry();
+    }
+    if (k.key == "Escape"){
+        acEntry();
+    }
 })
 
 //** 
